@@ -1,14 +1,14 @@
 {
   "name": "dirty-reprojectors",
   "version": "0.0.1",
-  "description": "make non-standard projections into mbtiles",
+  "description": "make different projections",
   "main": "reproject-geojson.js",
   "scripts": {},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/developmentseed/dirty-reprojectors.git"
   },
-  "author": "",
+  "author": "DevelopmentSeed",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/developmentseed/dirty-reprojectors/issues"
