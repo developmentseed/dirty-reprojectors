@@ -21,15 +21,16 @@ fs.readFile(path.join(__dirname, 'data/us-states.geojson'), function (err, data)
 })
 
 function write (data, projections) {
+  d3.geoStitch(data)
   for (var projection in projections) {
     if (typeof projections[projection] !== 'function') {
       throw new Error (projection + ' is not a valid projection')
     }
     var out = path.join(__dirname, 'output/geojson', projection + '.geojson')
     var reprojected = d3.geoProject(data, projections[projection])
+    console.log('Writing ' + projection)
     fs.writeFile(out, JSON.stringify(d3.geoQuantize(reprojected, 5)), (err) => {
       if (err) { throw err }
-      console.log('Finished ' + projection)
     })
   }
 }
