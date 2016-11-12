@@ -26,7 +26,8 @@ function write (data, projections) {
       throw new Error (projection + ' is not a valid projection')
     }
     var out = path.join(__dirname, 'output/geojson', projection + '.geojson')
-    fs.writeFile(out, JSON.stringify(d3.geoProject(data, projections[projection])), (err) => {
+    var reprojected = d3.geoProject(data, projections[projection])
+    fs.writeFile(out, JSON.stringify(d3.geoQuantize(reprojected, 5)), (err) => {
       if (err) { throw err }
       console.log('Finished ' + projection)
     })
