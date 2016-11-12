@@ -1,3 +1,7 @@
+output/geojson:
+	mkdir -p $@
+	./batch-project
+
 output/tiles/%.mbtiles: output/geojson/%.geojson
 	mkdir -p $(dir $@)
 	tippecanoe --projection EPSG:3857 \
