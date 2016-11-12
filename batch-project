@@ -4,7 +4,7 @@ var fs = require('fs')
 var path = require('path')
 var bulk = require('bulk-require')
 var d3 = require('d3-geo-projection')
-var projections = bulk(__dirname, ['projections/world/*.js']).projections
+var projections = bulk(__dirname, ['projections/*/*.js']).projections
 
 // country-level geojsons
 fs.readFile(path.join(__dirname, 'data/countries.geojson'), function (err, data) {
@@ -13,7 +13,7 @@ fs.readFile(path.join(__dirname, 'data/countries.geojson'), function (err, data)
   write(data, projections.world)
 })
 
-// country-level geojsons
+// us-level geojsons
 fs.readFile(path.join(__dirname, 'data/us-states.geojson'), function (err, data) {
   if (err) { throw err }
   data = JSON.parse(data)
@@ -28,6 +28,7 @@ function write (data, projections) {
     var out = path.join(__dirname, 'output/geojson', projection + '.geojson')
     fs.writeFile(out, JSON.stringify(d3.geoProject(data, projections[projection])), (err) => {
       if (err) { throw err }
+      console.log('Finished ' + projection)
     })
   }
 }
