@@ -16,11 +16,12 @@
   "homepage": "https://github.com/developmentseed/dirty-reprojectors#readme",
   "dependencies": {
     "bulk-require": "^1.0.0",
-    "d3-geo": "^1.3.1",
-    "d3-geo-projection": "^1.2.0",
+    "d3-geo": "dereklieu/d3-geo#master",
+    "d3-geo-projection": "dereklieu/d3-geo-projection#master",
     "geojson-stream": "0.0.1",
     "minimist": "^1.2.0",
     "through2": "^2.0.1",
     "turf-extent": "^1.0.4"
-  }
+  },
+  "devDependencies": {}
 }
