@@ -6,15 +6,10 @@ var through = require('through2')
 var argv = require('minimist')(process.argv.slice(2))
 
 var ALBERS_USA = require('./projections/us/albers-usa')
-var PEIRCE_QUINCUNCIAL = require('./projections/world/peirce-quincuncial')
 
 var proj
 if (!argv.projection || argv.projection === 'albersUsa') {
   proj = ALBERS_USA
-} else if (argv.projection === 'mercator') {
-  proj = MERCATOR
-} else if (argv.projection === 'peirceQuincuncial') {
-  proj = PEIRCE_QUINCUNCIAL
 } else {
   throw new Error('Unsupported projection ' + argv.projection)
 }
