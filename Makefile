@@ -1,6 +1,6 @@
 output/geojson:
 	mkdir -p $@
-	./batch-project
+	./batch-world-project
 
 output/tiles/%.mbtiles: output/geojson/%.geojson
 	mkdir -p $(dir $@)
