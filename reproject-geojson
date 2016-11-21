@@ -29,45 +29,6 @@ function write (feature, _, next) {
   next()
 }
 
-function reproject (coordinates) {
-  if (coordinates.length === 0) { return [] }
-  if (Array.isArray(coordinates[0])) {
-    coordinates.forEach(reproject)
-
-    var isRing = coordinates[0].length && !Array.isArray(coordinates[0][0])
-    for (var i = coordinates.length - 1; i >= 0; i--) {
-      var c = coordinates[i]
-      if (isRing) {
-        if (typeof c[0] !== 'number' || typeof c[1] !== 'number') {
-          console.error('dropping unprojectable point', c)
-          coordinates.splice(i, 1)
-        } else if (i > 1 && coordinates[i - 1][0] === c[0] && coordinates[i - 1][1] === c[1]) {
-          console.error('dropping redundant point', c)
-          coordinates.splice(i, 1)
-        }
-      } else if (c.length === 0) {
-        console.error('dropping empty geometry')
-        coordinates.splice(i, 1)
-      } else if (typeof c[0][0] === 'number' && c.length === 2) {
-        // after reprojecting a ring, we might have dropped redundant points
-        // and left ourselves with just a two-coordinate, degenerate ring (i.e.
-        // just the identical starting/ending coord).  If so, drop it.
-        console.error('dropping degenerate ring', c)
-        coordinates.splice(i, 1)
-      }
-    }
-
-    return
-  }
-
-  if (argv.reverse) {
-    reverse(coordinates)
-    return
-  }
-
-  forward(coordinates)
-}
-
 function forward (coordinates) {
   var projected = proj(coordinates)
   if (!projected) {
