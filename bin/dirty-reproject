@@ -1,0 +1,54 @@
+#!/usr/bin/env node
+
+const geojsonStream = require('geojson-stream')
+const extent = require('turf-extent')
+const through = require('through2')
+
+const projections = require('../projections')
+const reproject = require('../')
+
+const argv = require('minimist')(process.argv.slice(2), {
+  alias: {
+    f: 'forward',
+    r: 'reverse',
+    l: 'list'
+  },
+  default: {
+    reverse: 'mercator'
+  }
+})
+
+if (argv.list) {
+  console.log(Object.keys(projections).join('\n'))
+  process.exit(0)
+}
+
+if (!argv.forward && !argv.reverse) {
+  usage('Please supply either a --forward or --reverse projection (or both).')
+}
+
+function usage (message) {
+  if (message) { console.error(message) }
+  console.error('Usage:')
+  console.error('cat normal.geojson | dirty-reproject [--forward PROJECTION] [--reverse PROJECTION=mercator] > weird.geojson')
+  console.error('cat normal.geojson | dirty-reproject --forward PROJECTION --no-reverse > projected-space.geojson')
+  console.error('dirty-reproject --list (for a list of supported projections)')
+  process.exit(1)
+}
+
+process.stdin.pipe(geojsonStream.parse())
+.pipe(through.obj(write))
+.pipe(geojsonStream.stringify())
+.pipe(process.stdout)
+
+function write (feature, _, next) {
+  reproject({
+    forward: argv.forward,
+    reverse: argv.reverse,
+    projections: projections
+  }, feature.geometry.coordinates)
+  feature.bbox = extent(feature)
+  this.push(feature)
+  next()
+}
+
