@@ -29,8 +29,10 @@ if (!argv.forward && !argv.reverse) {
 
 function usage (message) {
   if (message) { console.error(message) }
-  console.error('Usage: cat normal.geojson | dirty-reproject [--forward PROJECTION] [--reverse PROJECTION=mercator] > weird.geojson')
-  console.error('Or "dirty-reproject --list" for a list of supported projections.')
+  console.error('Usage:')
+  console.error('cat normal.geojson | dirty-reproject [--forward PROJECTION] [--reverse PROJECTION=mercator] > weird.geojson')
+  console.error('cat normal.geojson | dirty-reproject --forward PROJECTION --no-reverse > projected-space.geojson')
+  console.error('dirty-reproject --list (for a list of supported projections)')
   process.exit(1)
 }
 

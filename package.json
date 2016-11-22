@@ -6,7 +6,11 @@
     "dirty-reproject": "./bin/dirty-reproject"
   },
   "main": "reproject-geojson.js",
-  "scripts": {},
+  "scripts": {
+    "lint": "eslint .",
+    "test": "npm run lint && tap test",
+    "docs": "documentation readme -s API index.js"
+  },
   "browserify": {
     "transform": [
       [
@@ -40,6 +44,11 @@
     "turf-extent": "^1.0.4"
   },
   "devDependencies": {
+    "documentation": "github:documentationjs/documentation#v4.0.0-beta14",
+    "eslint": "^3.10.2",
+    "eslint-config-standard": "^6.2.1",
+    "eslint-plugin-promise": "^3.4.0",
+    "eslint-plugin-standard": "^2.0.1",
     "tap": "^8.0.1"
   }
 }

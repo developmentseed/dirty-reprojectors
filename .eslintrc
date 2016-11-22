@@ -1,0 +1,13 @@
+{
+  "extends": ["standard"],
+  "plugins": ["react"],
+  "rules": {
+    "react/jsx-uses-react": "error",
+    "react/jsx-uses-vars": "error"
+  },
+  "env": {
+    "node": true,
+    "es6": true,
+    "browser": true
+  }
+}
