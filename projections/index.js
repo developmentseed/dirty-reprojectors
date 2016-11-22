@@ -15,7 +15,6 @@ const supported = [
   'conicEquidistant',
   'equirectangular',
   'gnomonic',
-  'identity',
   'mercator',
   'orthographic',
   'stereographic',

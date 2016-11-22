@@ -2,7 +2,9 @@
   "name": "dirty-reprojectors",
   "version": "0.0.1",
   "description": "make different projections",
-  "bin": {"dirty-reproject": "./bin/dirty-reproject"},
+  "bin": {
+    "dirty-reproject": "./bin/dirty-reproject"
+  },
   "main": "reproject-geojson.js",
   "scripts": {},
   "browserify": {
@@ -36,5 +38,8 @@
     "minimist": "^1.2.0",
     "through2": "^2.0.1",
     "turf-extent": "^1.0.4"
+  },
+  "devDependencies": {
+    "tap": "^8.0.1"
   }
 }
