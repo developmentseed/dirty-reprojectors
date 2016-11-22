@@ -22,7 +22,7 @@ function reproject (options, coordinates) {
     for (var i = coordinates.length - 1; i >= 0; i--) {
       var c = coordinates[i]
       if (isRing) {
-        if (typeof c[0] !== 'number' || typeof c[1] !== 'number') {
+        if (c.some(isInvalidCoordinate)) {
           coordinates.splice(i, 1)
         } else if (i > 1 && coordinates[i - 1][0] === c[0] && coordinates[i - 1][1] === c[1]) {
           coordinates.splice(i, 1)
@@ -78,4 +78,8 @@ function reverse (proj, projected) {
   projected[0] = reversed[0]
   projected[1] = reversed[1]
   return true
+}
+
+function isInvalidCoordinate (c) {
+  return isNaN(c) || c >= Infinity || c <= -Infinity
 }
