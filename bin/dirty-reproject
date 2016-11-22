@@ -45,6 +45,7 @@ function write (feature, _, next) {
   reproject({
     forward: argv.forward,
     reverse: argv.reverse,
+    projections: projections
   }, feature.geometry.coordinates)
   feature.bbox = extent(feature)
   this.push(feature)
