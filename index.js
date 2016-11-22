@@ -1,6 +1,4 @@
 
-const projections = require('./projections')
-
 module.exports = reproject
 
 /**
@@ -10,8 +8,9 @@ module.exports = reproject
  * performed first.
  *
  * @param {Object} options
- * @param {Function} [options.forward] The forward projection to use.
- * @param {Function} [options.reverse] The reverse projection to use.
+ * @param {Function|string} [options.forward] The forward projection to use.
+ * @param {Function|string} [options.reverse] The reverse projection to use.
+ * @param {Object} [options.projections] A map of named projections to use.  If provided, then string values of `options.forward` or `options.reverse` will be used as keys to look up the projection function in `options.projections`.  For an extensive list provided by d3-geo-projection, use `require('dirty-reprojectors/projections')`.
  * @param {Array} coordinates
  */
 function reproject (options, coordinates) {
@@ -42,19 +41,23 @@ function reproject (options, coordinates) {
   }
 
   if (options.forward) {
-    forward(options.forward, coordinates)
+    let proj = options.forward
+    if (typeof proj === 'string') {
+      proj = options.projections[proj]
+    }
+    forward(proj, coordinates)
   }
 
   if (options.reverse) {
-    reverse(options.reverse, coordinates)
+    let proj = options.reverse
+    if (typeof proj === 'string') {
+      proj = options.projections[proj]
+    }
+    reverse(proj, coordinates)
   }
 }
 
 function forward (proj, coordinates) {
-  if (typeof proj === 'string') {
-    proj = projections[proj]
-  }
-
   var projected = proj(coordinates)
   if (!projected) {
     coordinates[0] = coordinates[1] = null
@@ -66,10 +69,6 @@ function forward (proj, coordinates) {
 }
 
 function reverse (proj, projected) {
-  if (typeof proj === 'string') {
-    proj = projections[proj]
-  }
-
   projected[1] = -projected[1]
   var reversed = proj.invert(projected)
   if (!reversed) {
