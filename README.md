@@ -4,16 +4,20 @@ Quick and dirty re-projections to trick your web maps out of web mercator.
 
 ## Install
 
-    npm install dirty-reprojectors
+    npm install -g dirty-reprojectors
 
 ## Usage
 
 ### CLI
 
-To reproject some geojson so that web mapping libraries will render it looking
-like 'albersUsa':
+    cat input.geojson | dirty-reproject --forward PROJECTION [--reverse PROJECTION=mercator] > output.geojson
+
+Example: to reproject some geojson so that web mapping libraries will render it
+looking like 'albersUsa':
 
     cat input.geojson | dirty-reproject --forward albersUsa > output.geojson
+
+For a list of supported projections, `dirty-reproject --list`
 
 
 ### API
@@ -49,7 +53,7 @@ What this actually does is:
 The main catch is that if you actually look at the longitude/latitude
 coordinates in `output.geojson`, they are totally wrong.  (There are other,
 subtler catches, too, having to do with Web Mercator's limited latitude range,
-loss of precision, and probably many other nuances I am not aware of.)
+varying loss of precision, and probably many other nuances I am not aware of.)
 
 ## Credits
 
