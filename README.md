@@ -10,7 +10,11 @@ Quick and dirty re-projections to trick your web maps out of web mercator.
 
 ### CLI
 
-    cat input.geojson | ./reproject-geojson --forward albersUsa > output.geojson
+To reproject some geojson so that web mapping libraries will render it looking
+like 'albersUsa':
+
+    cat input.geojson | dirty-reproject --forward albersUsa > output.geojson
+
 
 ### API
 
@@ -30,6 +34,22 @@ performed first.
     -   `options.reverse` **([Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function) \| [string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String))?** The reverse projection to use.
     -   `options.projections` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)?** A map of named projections to use.  If provided, then string values of `options.forward` or `options.reverse` will be used as keys to look up the projection function in `options.projections`.  For an extensive list provided by d3-geo-projection, use `require('dirty-reprojectors/projections')`.
 -   `coordinates` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** 
+
+## How it works
+
+Take, for example:
+
+    cat input.geojson | dirty-reproject --forward albersUsa > output.geojson
+
+What this actually does is:
+
+1. Project `input.geojson` from WGS 84 (longitude/latitude) into `albersUsa`, with the target coordinates scaled to match the dimensions of Web Mercator.
+2. Reverse-project the result back to WGS84 _as if_ it had been projected with Web Mercator.  So now, when your favorite web mapping library tries to project it into mercator, the geometries end up looking like they were projected using Albers.
+
+The main catch is that if you actually look at the longitude/latitude
+coordinates in `output.geojson`, they are totally wrong.  (There are other,
+subtler catches, too, having to do with Web Mercator's limited latitude range,
+loss of precision, and probably many other nuances I am not aware of.)
 
 ## Credits
 
