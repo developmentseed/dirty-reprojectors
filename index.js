@@ -1,3 +1,5 @@
+const d3 = require('d3-geo')
+Object.assign(d3, require('d3-geo-projection'))
 
 module.exports = reproject
 
@@ -11,41 +13,17 @@ module.exports = reproject
  * @param {Function|string} [options.forward] The forward projection to use.
  * @param {Function|string} [options.reverse] The reverse projection to use.
  * @param {Object} [options.projections] A map of named projections to use.  If provided, then string values of `options.forward` or `options.reverse` will be used as keys to look up the projection function in `options.projections`.  For an extensive list provided by d3-geo-projection, use `require('dirty-reprojectors/projections')`.
- * @param {Array} coordinates
+ * @param {Object} geometry A GeoJSON geometry object
  */
-function reproject (options, coordinates) {
-  if (coordinates.length === 0) { return [] }
-  if (Array.isArray(coordinates[0])) {
-    coordinates.forEach((coord) => reproject(options, coord))
-
-    var isRing = coordinates[0].length && !Array.isArray(coordinates[0][0])
-    for (var i = coordinates.length - 1; i >= 0; i--) {
-      var c = coordinates[i]
-      if (isRing) {
-        if (c.some(isInvalidCoordinate)) {
-          coordinates.splice(i, 1)
-        } else if (i > 1 && coordinates[i - 1][0] === c[0] && coordinates[i - 1][1] === c[1]) {
-          coordinates.splice(i, 1)
-        }
-      } else if (c.length === 0) {
-        coordinates.splice(i, 1)
-      } else if (typeof c[0][0] === 'number' && c.length === 2) {
-        // after reprojecting a ring, we might have dropped redundant points
-        // and left ourselves with just a two-coordinate, degenerate ring (i.e.
-        // just the identical starting/ending coord).  If so, drop it.
-        coordinates.splice(i, 1)
-      }
-    }
-
-    return
-  }
+function reproject (options, geometry) {
+  let streams = []
 
   if (options.forward) {
     let proj = options.forward
     if (typeof proj === 'string') {
       proj = options.projections[proj]
     }
-    forward(proj, coordinates)
+    streams.push(proj.stream, flipY())
   }
 
   if (options.reverse) {
@@ -53,33 +31,55 @@ function reproject (options, coordinates) {
     if (typeof proj === 'string') {
       proj = options.projections[proj]
     }
-    reverse(proj, coordinates)
+    streams.push(reverse(proj), flipY())
+  }
+
+  streams.reverse()
+
+  const projection = {
+    stream: function (output) {
+      return streams.reduce((combined, s) => s(combined), output)
+    }
+  }
+
+  return d3.geoProject(geometry, projection)
+}
+
+function reverse (projection) {
+  let prev = []
+  return d3.geoTransform({
+    point: function (x, y) {
+      // prevent wrapping due to precision issues
+      x = clamp(x, -20037508.34278924, 20037508.34278924)
+      var reversed = projection.invert([x, y])
+
+      // drop points that fail to project or are identical to the previous
+      // point
+      if (!reversed || (reversed[0] === prev[0] && reversed[1] === prev[1])) {
+        return
+      }
+
+      prev = reversed
+      this.stream.point(reversed[0], reversed[1])
+    }
+  }).stream
+}
+
+function flipY () {
+  return d3.geoTransform({
+    point: function (x, y) {
+      this.stream.point(x, -y)
+    }
+  }).stream
+}
+
+function clamp (value, min, max) {
+  if (value > max) {
+    return max
+  } else if (value < min) {
+    return min
+  } else {
+    return value
   }
 }
 
-function forward (proj, coordinates) {
-  var projected = proj(coordinates)
-  if (!projected) {
-    coordinates[0] = coordinates[1] = null
-    return false
-  }
-  coordinates[0] = projected[0]
-  coordinates[1] = -projected[1]
-  return true
-}
-
-function reverse (proj, projected) {
-  projected[1] = -projected[1]
-  var reversed = proj.invert(projected)
-  if (!reversed) {
-    projected[0] = projected[1] = null
-    return false
-  }
-  projected[0] = reversed[0]
-  projected[1] = reversed[1]
-  return true
-}
-
-function isInvalidCoordinate (c) {
-  return isNaN(c) || c >= Infinity || c <= -Infinity
-}

@@ -42,11 +42,11 @@ process.stdin.pipe(geojsonStream.parse())
 .pipe(process.stdout)
 
 function write (feature, _, next) {
-  reproject({
+  feature.geometry = reproject({
     forward: argv.forward,
     reverse: argv.reverse,
     projections: projections
-  }, feature.geometry.coordinates)
+  }, feature.geometry)
   feature.bbox = extent(feature)
   this.push(feature)
   next()
