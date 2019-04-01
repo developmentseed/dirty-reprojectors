@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 const geojsonStream = require('geojson-stream')
-const extent = require('turf-extent')
+const extent = require('@turf/bbox').default
 const through = require('through2')
 
 const projections = require('../projections')
