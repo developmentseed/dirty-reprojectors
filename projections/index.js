@@ -1,5 +1,6 @@
 let d3 = require('d3-geo')
 let geoAlbersUsaPr = require('./albers-usa-pr.js')
+let geoAlbersUsaTerritories = require('./albers-usa-territories.js')
 
 Object.assign(d3, require('d3-geo-projection'))
 
@@ -11,6 +12,7 @@ const supported = [
   'albers',
   'albersUsa',
   'albersUsaPr',
+  'albersUsaTerritories',
   'azimuthalEqualArea',
   'azimuthalEquidistant',
   'conicConformal',
@@ -123,4 +125,4 @@ for (const d3name in d3) {
 }
 
 projections['albersUsaPr'] = geoAlbersUsaPr().translate([0, 0]).scale(R)
-
+projections['albersUsaTerritories'] = geoAlbersUsaTerritories().translate([0, 0]).scale(R)
