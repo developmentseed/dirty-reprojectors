@@ -50,11 +50,11 @@ function geoAlbersUsaPr() {
         t = lower48.translate(),
         x = (coordinates[0] - t[0]) / k,
         y = (coordinates[1] - t[1]) / k;
-    return (y >= 0.120 && y < 0.234 && x >= -0.425 && x < -0.214 ? alaska
-        : y >= 0.166 && y < 0.234 && x >= -0.214 && x < -0.115 ? hawaii
+    return (y >= 0.120 && y < 0.234 && x >= -0.390 && x < -0.185 ? alaska
+        : y >= 0.166 && y < 0.234 && x >= -0.185 && x < -0.080 ? hawaii
         : y >= 0.204 && y < 0.234 && x >= 0.300 && x < 0.380 ? puertoRico
-        : y >= 0.050 && y < 0.204 && x >= 0.340 && x < 0.380 ? guamMariana
-        : y >= 0.160 && y < 0.204 && x >= 0.280 && x < 0.340 ? americanSamoa
+        : y >= 0.050 && y < 0.210 && x >= -0.450 && x < - 0.390 ? guamMariana
+        : y >= 0.210 && y < 0.234 && x >= -0.450 && x < -0.390 ? americanSamoa
         : lower48).invert(coordinates);
   };
 
@@ -84,28 +84,28 @@ function geoAlbersUsaPr() {
         .stream(pointStream);
 
     alaskaPoint = alaska
-        .translate([x - 0.310 * k, y + 0.201 * k])
-        .clipExtent([[x - 0.425 * k + epsilon, y + 0.120 * k + epsilon], [x - 0.214 * k - epsilon, y + 0.234 * k - epsilon]])
+        .translate([x - 0.275 * k, y + 0.201 * k])
+        .clipExtent([[x - 0.390 * k + epsilon, y + 0.120 * k + epsilon], [x - 0.185 * k - epsilon, y + 0.234 * k - epsilon]])
         .stream(pointStream);
 
     hawaiiPoint = hawaii
-        .translate([x - 0.205 * k, y + 0.212 * k])
-        .clipExtent([[x - 0.214 * k + epsilon, y + 0.166 * k + epsilon], [x - 0.115 * k - epsilon, y + 0.234 * k - epsilon]])
+        .translate([x - 0.180 * k, y + 0.212 * k])
+        .clipExtent([[x - 0.185 * k + epsilon, y + 0.166 * k + epsilon], [x - 0.080 * k - epsilon, y + 0.234 * k - epsilon]])
         .stream(pointStream);
 
     puertoRicoPoint = puertoRico
         .translate([x + 0.335 * k, y + 0.224 * k])
         .clipExtent([[x + 0.300 * k, y + 0.204 * k], [x + 0.380 * k, y + 0.234 * k]])
         .stream(pointStream).point;
-    
+
     guamMarianaPoint = guamMariana
-        .translate([x + 0.360 * k, y + 0.140 * k])
-        .clipExtent([[x + 0.340 * k, y + 0.050 * k], [x + 0.380 * k, y + 0.204 * k]])
+        .translate([x - 0.415 * k, y + 0.140 * k])
+        .clipExtent([[x - 0.450 * k, y + 0.050 * k], [x - 0.390 * k, y + 0.210 * k]])
         .stream(pointStream).point;
-    
+
     americanSamoaPoint = americanSamoa
-        .translate([x + 0.315 * k, y + 0.180 * k])
-        .clipExtent([[x + 0.280 * k, y + 0.160 * k], [x + 0.340 * k, y + 0.204 * k]])
+        .translate([x - 0.415 * k, y + 0.215 * k])
+        .clipExtent([[x - 0.450 * k, y + 0.210 * k], [x - 0.390 * k, y + 0.234 * k]])
         .stream(pointStream).point;
 
     return reset();
