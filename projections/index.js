@@ -1,4 +1,6 @@
 let d3 = require('d3-geo')
+let geoAlbersUsaPr = require('./albers-usa-pr.js')
+
 Object.assign(d3, require('d3-geo-projection'))
 
 let R = 6378137.0 // radius of Earth in meters
@@ -8,6 +10,7 @@ const projections = module.exports
 const supported = [
   'albers',
   'albersUsa',
+  'albersUsaPr',
   'azimuthalEqualArea',
   'azimuthalEquidistant',
   'conicConformal',
@@ -118,4 +121,6 @@ for (const d3name in d3) {
   }
   projections[name] = d3[d3name]().translate([0, 0]).scale(R)
 }
+
+projections['albersUsaPr'] = geoAlbersUsaPr().translate([0, 0]).scale(R)
 
