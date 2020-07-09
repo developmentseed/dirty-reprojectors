@@ -29,7 +29,7 @@
     "url": "git+https://github.com/developmentseed/dirty-reprojectors.git"
   },
   "author": "DevelopmentSeed",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/developmentseed/dirty-reprojectors/issues"
   },
